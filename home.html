@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <title>CaptChat</title>
+    <script type="text/javascript" src="./index.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+
+<body style="background: #111936;">
+    <!-- Add an ID to the chat icon for easier targeting -->
+    <div id="chaticon">
+        <i class="fas fa-comments" style="color:#FFC106"></i>
+    </div>
+
+    <!-- Chat box -->
+    <div id="chatbox" class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-lg" data-v0-t="card"
+        style="display: none;">
+        <div class="flex flex-col space-y-1.5 p-4 rounded-t-lg">
+            <div class="flex items-center justify-between gap-4">
+                <h2 class="text-xl font-bold" style="color:white">CaptChat <i class="fas fa-comments"
+                        style="color:#FFC106"></i></h2>
+                <div>
+                    <!-- Delete Chat  -->
+                    <button
+                        id="deleteButton"
+                        class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
+                        <i class="fa fa-trash" style="color: #fff;"></i>
+                    </button>
+                    <button 
+                        id="closeButton"
+                        class="inline-flex float-right items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
+                        <i class="fa fa-times" style="color: #fff;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex flex-col p-0 gap-0">
+            <div id="chat_section" class="flex flex-col gap-2 p-4 max-h-80 min-h-80 h-80 overflow-auto" style="background: #111936;">
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800">
+                    <p class="text-sm leading-none">Hello! I'm the Ship Voyage Chatbot. How can I assist you today?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">2 minutes ago</time>
+                </div>
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800 self-end">
+                    <p class="text-sm leading-none">Can you provide me with the departure time of the ship?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">Just now</time>
+                </div>
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800">
+                    <p class="text-sm leading-none">Hello! I'm the Ship Voyage Chatbot. How can I assist you today?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">2 minutes ago</time>
+                </div>
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800 self-end">
+                    <p class="text-sm leading-none">Can you provide me with the departure time of the ship?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">Just now</time>
+                </div>
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800">
+                    <p class="text-sm leading-none">Hello! I'm the Ship Voyage Chatbot. How can I assist you today?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">2 minutes ago</time>
+                </div>
+                <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800 self-end">
+                    <p class="text-sm leading-none">Can you provide me with the departure time of the ship?</p>
+                    <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">Just now</time>
+                </div>
+            </div>
+            <div>
+                <div id="snackbar" class="absolute z-1000 w-full flex items-center justify-center rounded-lg bg-red-500 text-white p-4 bottom-4 border-2 border-white" style="display: none;bottom: 70px;">
+                    <p id="snackbarText"></p>
+                </div>
+                <div class="mt-auto p-4">
+                    <div class="flex space-x-4">
+                        <input
+                            id="chatInput"
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 min-w-0"
+                            placeholder="Type a message..." type="text" />
+                        <button
+                            id="sendButton"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 w-12"
+                            style="background-color: #FFC106;color: 111936;">
+                            <i class="fa fa-paper-plane" style="color: #111936;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

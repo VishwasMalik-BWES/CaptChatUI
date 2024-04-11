@@ -12,6 +12,193 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 
+<style>
+    #chaticon {
+        min-width: 60px;
+        background-color: #010516;
+        box-shadow: var(--shadow-2);
+        color: #FFC106;
+        text-align: center;
+        border: 1px solid #FFC106;
+        border-radius: 20px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        right: 40px;
+        bottom: 50px;
+        font-size: 17px;
+    }
+
+    #chatbox {
+        display: none;
+        position: fixed;
+        bottom: 50px;
+        right: 40px;
+        z-index: 999;
+        width: 25%;
+        background-color: #010516;
+        border: 1px solid #FFC106;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        animation: slide-in 0.5s forwards;
+    }
+
+    @media (max-width: 600px) {
+        #chatbox {
+            width: 90%;
+            bottom: 20px;
+            right: 5%;
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #010516;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Get references to the chat icon and the chat box
+        const chatIcon = document.getElementById('chaticon');
+        const chatBox = document.getElementById('chatbox');
+        const closeButton = document.getElementById('closeButton');
+
+        // Toggle the display of the chat box when the chat icon is clicked
+        chatIcon.addEventListener('click', () => {
+            chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Close the chat box when the close button is clicked
+        closeButton.addEventListener('click', () => {
+            chatBox.style.display = 'none';
+        });
+
+        // On click delete delete the chat section
+        const deleteButton = document.getElementById('deleteButton');
+        const chatSection = document.getElementById('chat_section');
+
+        deleteButton.addEventListener('click', () => {
+            chatSection.innerHTML = '<div id="emptyChatDiv" class="w-full h-full flex justify-center items-center text-gray-500"><p>No messages yet...</p></div>';
+        });
+
+        // On send click append the html to the chat section
+        const sendButton = document.getElementById('sendButton');
+
+        sendButton.addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const message = input.value;
+            if (message === '') {
+                // Display an error message in the snackbar if the input is empty
+                const snackbar = document.getElementById('snackbar');
+                const snackbarText = document.getElementById('snackbarText');
+                snackbarText.textContent = 'Please enter a message !!!';
+                snackbar.style.display = 'flex';
+                setTimeout(() => {
+                    snackbar.style.display = 'none';
+                }, 3000);
+                return;
+            }
+
+            const html = `
+        <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800 self-end">
+        <p class="text-sm leading-none">${message}</p>
+        <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400 float-end">Just now</time>
+        </div>
+        `;
+            // Remove the empty chat div if it exists
+            const emptyChatDiv = document.getElementById('emptyChatDiv');
+            if (emptyChatDiv) {
+                chatSection.removeChild(emptyChatDiv);
+            }
+            chatSection.innerHTML += html;
+            input.value = '';
+
+            // Scroll to the bottom of the chat section
+            chatSection.scrollTop = chatSection.scrollHeight;
+
+            // Fetch the api for the requestText
+            const requestText = message;
+            // fetchApi(requestText)
+            //     .then((data) => {
+            //         const response = data['message'];
+            //         const reponseTime = 'Just now';
+            //         addResponseText(response, reponseTime);
+            //     })
+            //     .catch((error) => {
+            //         console.error('Error:', error);
+            //     });
+            setTimeout(() => {
+                const response = 'Hello, how can I help you?';
+                const reponseTime = 'Just now';
+                addResponseText(response, reponseTime);
+            }, 3000);
+        });
+
+        // Close the chat box when the user clicks outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target !== chatIcon && event.target !== chatBox && !chatBox.contains(event.target)) {
+                chatBox.style.display = 'none';
+            }
+        });
+
+        // Add response in the chatbox
+        const addResponseText = (response, reponseTime) => {
+            const html = `
+            <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800 self-start">
+                <p class="text-sm leading-none">${response}</p>
+                <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400 float-end">${reponseTime}</time>
+            </div>
+        `;
+            // Remove the empty chat div if it exists
+            const emptyChatDiv = document.getElementById('emptyChatDiv');
+            if (emptyChatDiv) {
+                chatSection.removeChild(emptyChatDiv);
+            }
+
+            chatSection.innerHTML += html;
+
+            // Scroll to the bottom of the chat section
+            chatSection.scrollTop = chatSection.scrollHeight;
+        };
+
+        // fetch the api for the requestText
+        const fetchApi = async (requestText) => {
+            const response = await fetch('http://url', {        // Modify the url to the api endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: requestText }),
+            });
+            const data = await response.json();
+            return data;
+        }
+
+        document.getElementById('chatInput').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                // Replace 'sendButton' with the actual ID or class of your send button
+                document.getElementById('sendButton').click();
+            }
+        });
+    });
+
+</script>
+
 
 <body style="background: #111936;">
     <!-- Add an ID to the chat icon for easier targeting -->
@@ -28,22 +215,21 @@
                         style="color:#FFC106"></i></h2>
                 <div>
                     <!-- Delete Chat  -->
-                    <button
-                        id="deleteButton"
+                    <button id="deleteButton"
                         class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
                         <i class="fa fa-trash" style="color: #fff;"></i>
                     </button>
-                    <button 
-                        id="closeButton"
+                    <button id="closeButton"
                         class="inline-flex float-right items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
                         <i class="fa fa-times" style="color: #fff;"></i>
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <div class="flex flex-col p-0 gap-0">
-            <div id="chat_section" class="flex flex-col gap-2 p-4 max-h-80 min-h-80 h-80 overflow-auto" style="background: #111936;">
+            <div id="chat_section" class="flex flex-col gap-2 p-4 max-h-80 min-h-80 h-80 overflow-auto"
+                style="background: #111936;">
                 <div class="rounded-xl w-4/5 p-4 bg-gray-100 dark:bg-gray-800">
                     <p class="text-sm leading-none">Hello! I'm the Ship Voyage Chatbot. How can I assist you today?</p>
                     <time class="mt-2 block text-xs text-gray-500 dark:text-gray-400">2 minutes ago</time>
@@ -70,17 +256,17 @@
                 </div>
             </div>
             <div>
-                <div id="snackbar" class="absolute z-1000 w-full flex items-center justify-center rounded-lg bg-red-500 text-white p-4 bottom-4 border-2 border-white" style="display: none;bottom: 70px;">
+                <div id="snackbar"
+                    class="absolute z-1000 w-full flex items-center justify-center rounded-lg bg-red-500 text-white p-4 bottom-4 border-2 border-white"
+                    style="display: none;bottom: 70px;">
                     <p id="snackbarText"></p>
                 </div>
                 <div class="mt-auto p-4">
                     <div class="flex space-x-4">
-                        <input
-                            id="chatInput"
+                        <input id="chatInput"
                             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1 min-w-0"
                             placeholder="Type a message..." type="text" />
-                        <button
-                            id="sendButton"
+                        <button id="sendButton"
                             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 w-12"
                             style="background-color: #FFC106;color: 111936;">
                             <i class="fa fa-paper-plane" style="color: #111936;"></i>
